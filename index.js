@@ -2,9 +2,12 @@ require("dotenv").config();
 const conn = require("./db/conn");
 
 const Usuario = require("./models/Usuario");
-
 const express = require ("express");
+const handlebars = require("express-handlebars");
 const app = express();
+
+app.engine("handlebars", handlebars.engine());
+app.set("view engine", "handlebars");
 
 app.use(
   express.urlencoded({
@@ -14,7 +17,15 @@ app.use(
 app.use(express.json());
 
 app.get("/usuarios/novo", (req, res) => {
-  res.sendFile('${__dirname}/views/formUsuario.html');
+  res.render('formUsuario');
+});
+
+app.get("/", (req, res) => {
+  res.render('home');
+});
+
+app.get("/usuarios", (req, res) => {
+  res.render('usuarios');
 });
 
 app.post("/usuarios/novo", async (req, res) => {

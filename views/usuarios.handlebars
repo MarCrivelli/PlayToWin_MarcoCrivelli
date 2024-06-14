@@ -15,6 +15,11 @@
             <td>{{this.nome}}</td>
             <td>
                 <a href="/usuarios/{{this.id}}/atualizar">Atualizar</a>
+                <form action="/usuarios/excluir" method="post">
+                    {{!-- a --}}
+                    <input type="hidden" value="{{this.id}}" name="id"/>
+                    <input type="submit" value="Excluir">
+                </form>
             </td>
         </tr>   
     {{/each}}

@@ -1,0 +1,22 @@
+{{#if usuario}}
+    <h1>Atualizar cadastro</h1>
+    <form action="usuarios/{{usuario.id}}/atualizar" method="post">
+    {{else}} 
+        <h1>Cadastre seu cartão</h1>
+        <form action="/usuarios/:id/novoCartao" method="post"></form>
+{{/if}}    
+
+        <div>
+            <label for="numero">Número</label>
+            <input type="text" maxlength="16" minlength="16" id="nickname" name="nickname"/>
+        </div>
+        <div>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" maxlength="30" name="nome" value="{{usuario.nome}}"/>
+        </div>
+        <div>
+            <label for="cvv">Nome:</label>
+            <input type="text" id="cvv" maxlength="3" minlength="3" name="nome" value="{{usuario.nome}}"/>
+        </div>
+        
+</form>

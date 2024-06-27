@@ -4,6 +4,8 @@ const conn = require("./db/conn");
 const Usuario = require("./models/Usuario");
 const express = require ("express");
 const handlebars = require("express-handlebars");
+const Cartao = require("./models/cartao");
+const Usuario = require("./models/Usuario");
 const app = express();
 
 app.engine("handlebars", handlebars.engine());
@@ -91,6 +93,39 @@ app.post("/usuarios/excluir", async (req, res) => {
     res.send("Erro ao excluir usuário!")
   }
 })
+
+//Rota Cartões
+app.get("/usuarios/:id/cartoes", async(req, res)=> {
+     const id = parseInt(req.params.id);
+     let cartoes = usuario.Cartaos;
+     cartoes = cartoes.map((cartao) => cartao.toJson)
+     const usuario = await Usuario.findByPk(id, 
+      {include:["Cartaos"] });
+      usuario.Cartaos
+     res.render("cartoes", {id});
+});
+
+app.get ("usuarios/:id/novoCartao", async (req, res) =>{
+  const id = parseInt(req.params.id);
+  res.render("formCartao", {
+    usuario: usuario.toJson(),
+    cartoes,
+  });
+});
+
+app.post ("usuarios/:id/novoCartao", async (req, res) =>{
+  const id = parseInt(req.params.id);
+  const dadosCartao={
+    numero: req.body.numero,
+    nome: req.body.nome,
+    cvv: req.body.cvv,
+    UsuarioId: id,
+  };
+  await Cartao.create(dadosCartao);
+  res.redirect(`/usuarios/${id}/cartoes`)
+});
+
+
 
 app.listen(8000, () => {
   console.log("Server rodando na porta 8000!");

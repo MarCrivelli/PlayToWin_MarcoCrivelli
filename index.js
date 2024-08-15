@@ -5,7 +5,6 @@ const Usuario = require("./models/Usuario");
 const express = require ("express");
 const handlebars = require("express-handlebars");
 const Cartao = require("./models/cartao");
-const Usuario = require("./models/Usuario");
 const app = express();
 
 app.engine("handlebars", handlebars.engine());
@@ -27,8 +26,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/usuarios", async (req, res) => {
-  const usuarios = await Usuario.findALL({raw: true})
-  res.render(usuarios);
+  const usuarios = await Usuario.findAll({raw: true})
+  res.render('usuarios', {usuarios});
 });
 
 app.post("/usuarios/novo", async (req, res) => {
@@ -97,19 +96,27 @@ app.post("/usuarios/excluir", async (req, res) => {
 //Rota Cartões
 app.get("/usuarios/:id/cartoes", async(req, res)=> {
      const id = parseInt(req.params.id);
-     let cartoes = usuario.Cartaos;
-     cartoes = cartoes.map((cartao) => cartao.toJson)
      const usuario = await Usuario.findByPk(id, 
-      {include:["Cartaos"] });
-      usuario.Cartaos
-     res.render("cartoes", {id});
+      {raw: true});
+
+     let cartoes = await Cartao.findAll({
+      raw: true,
+      where:{UsuarioId: id}
+    });
+
+
+     res.render("cartoes", {
+      cartoes, 
+      usuario
+    });
 });
 
-app.get ("usuarios/:id/novoCartao", async (req, res) =>{
+app.get ("/usuarios/:id/novoCartao", async (req, res) =>{
   const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, 
+    {raw: true});
   res.render("formCartao", {
-    usuario: usuario.toJson(),
-    cartoes,
+    usuario
   });
 });
 

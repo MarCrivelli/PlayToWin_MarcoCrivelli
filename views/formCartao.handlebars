@@ -1,6 +1,6 @@
 {{#if usuario}}
     <h1>Atualizar cadastro</h1>
-    <form action="usuarios/{{usuario.id}}/atualizar" method="post">
+    <form action="/usuarios/{{usuario.id}}/atualizar" method="post">
     {{else}} 
         <h1>Cadastre seu cartão</h1>
         <form action="/usuarios/:id/novoCartao" method="post"></form>

@@ -6,6 +6,7 @@ const express = require ("express");
 const handlebars = require("express-handlebars");
 const Cartao = require("./models/cartao");
 const app = express();
+const Conquista = require('./models/Conquista');
 
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
@@ -130,6 +131,36 @@ app.post ("usuarios/:id/novoCartao", async (req, res) =>{
   };
   await Cartao.create(dadosCartao);
   res.redirect(`/usuarios/${id}/cartoes`)
+});
+
+app.get("/jogo/:id/conquista", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const jogo = await Jogo.findByPk(id, { include: ["Conquistas"] });
+  let conquista = jogo.Conquistas;
+  conquista = conquista.map((conquista) => conquista.toJSON())
+  res.render("conquista.handlebars", { jogo: jogo.toJSON(), conquista });
+});
+
+app.get("/jogos/{{this.id}}/conquista", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const jogo = await Jogo.findByPk(id, { raw: true });
+
+  res.render("formConquista", { jogo });
+});
+
+//Cadastro das conquistas
+app.post("/jogos/{{this.id}}/conquista", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const dadosConquista = {
+      nickname: req.body.nickname,
+      conquistaAdq: req.body.conquistaAdq,
+      UsuarioId: id,
+  };
+
+  await Conquista.create(dadosConquista);
+
+  res.redirect(`/jogos/${id}/conquista`);
 });
 
 
